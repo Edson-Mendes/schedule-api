@@ -1,0 +1,18 @@
+# Datasource
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/schedule-db
+    username: user
+    password: 1234
+
+  sql:
+    init:
+      mode: always
+      platform: postgres
+
+# Logging
+logging:
+  level:
+    org:
+      springframework:
+        r2dbc: DEBUG
