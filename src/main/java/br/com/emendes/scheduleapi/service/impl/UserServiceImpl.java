@@ -8,6 +8,7 @@ import br.com.emendes.scheduleapi.model.entity.User;
 import br.com.emendes.scheduleapi.repository.UserRepository;
 import br.com.emendes.scheduleapi.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
   private final UserMapper userMapper;
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public Mono<UserResponse> register(RegisterUserRequest userRequest) {
@@ -28,8 +30,8 @@ public class UserServiceImpl implements UserService {
     }
 
     User user = userMapper.toUser(userRequest);
-
-    // TODO: Encriptar o password e settar no user.
+    user.setPassword(passwordEncoder.encode(userRequest.password()));
+    user.setRoles("ROLE_USER");
 
     return userRepository.save(user)
         .map(userMapper::toUserResponse);
