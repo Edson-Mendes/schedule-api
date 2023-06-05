@@ -29,4 +29,15 @@ public record RegisterUserRequest(
     @Size(min = 8, max = 30, message = "confirmPassword must contain between {min} and {max} characters")
     String confirmPassword
 ) {
+
+  /**
+   * Verifica se password e confirmPassword são iguais.
+   *
+   * @return true, se password e confirmPassword forem iguais, false caso contrário.
+   */
+  public boolean passwordsMatch() {
+    if (password == null || confirmPassword == null) return false;
+    return password.equals(confirmPassword);
+  }
+
 }
