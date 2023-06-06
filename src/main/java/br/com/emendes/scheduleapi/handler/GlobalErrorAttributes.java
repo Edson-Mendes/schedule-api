@@ -14,6 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Classe para manipulação de atributos em respostas de erros.
+ */
 @Slf4j
 @Component
 public class GlobalErrorAttributes extends DefaultErrorAttributes {

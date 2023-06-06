@@ -17,6 +17,9 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Exception handler da aplicação.
+ */
 @Component
 @Order(-2)
 public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {

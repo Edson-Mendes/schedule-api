@@ -1,4 +1,4 @@
-package br.com.emendes.scheduleapi.config;
+package br.com.emendes.scheduleapi.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
