@@ -8,8 +8,10 @@ import br.com.emendes.scheduleapi.model.entity.User;
 import br.com.emendes.scheduleapi.repository.UserRepository;
 import br.com.emendes.scheduleapi.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,7 +28,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Mono<UserResponse> register(RegisterUserRequest userRequest) {
     if (!userRequest.passwordsMatch()) {
-      throw new PasswordsDoNotMatch("password and confirmPassword do not matches");
+      throw new PasswordsDoNotMatch("Password and confirmPassword do not matches");
     }
 
     User user = userMapper.toUser(userRequest);
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
     user.setRoles("ROLE_USER");
 
     return userRepository.save(user)
+        .onErrorResume(e -> Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "E-mail already in use")))
         .map(userMapper::toUserResponse);
   }
 
