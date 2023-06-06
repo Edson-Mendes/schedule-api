@@ -9,8 +9,9 @@ public interface JwtService {
 
   /**
    * Gera um JWT a partir dos dados do User.
+   *
    * @return jwt
    */
-  String generateToken(User user);
+  String generateJWT(User user);
 
 }

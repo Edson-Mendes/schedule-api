@@ -16,3 +16,9 @@ logging:
     org:
       springframework:
         r2dbc: DEBUG
+
+# JWT
+schedule-api:
+  jwt:
+    expiration: ${JWT_EXPIRATION:86400000}
+    secret: ${JWT_SECRET:12341234123412341234123412341234}

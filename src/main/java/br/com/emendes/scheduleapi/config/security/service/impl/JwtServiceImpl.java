@@ -26,7 +26,7 @@ public class JwtServiceImpl implements JwtService {
   private String secret;
 
   @Override
-  public String generateToken(User user) {
+  public String generateJWT(User user) {
     return Jwts.builder()
         .setIssuer("Schedule API")
         .setSubject(user.getUsername())
