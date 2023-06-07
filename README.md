@@ -24,6 +24,7 @@ Projeto com o objetivo de por em prática meus estudos sobre programação reati
 <a href="https://netty.io/" target="_blank"><img src="https://img.shields.io/badge/Netty-f8f8f8.svg?&style=for-the-badge&logo=netty&logoColor=black" target="_blank"></a>
 
 <a href="https://projectlombok.org/" target="_blank"><img src="https://img.shields.io/badge/Lombok-a4a4a4.svg?&style=for-the-badge&logo=lombok&logoColor=black" target="_blank"></a>
+<a href="https://github.com/jwtk/jjwt" target="_blank"><img src="https://img.shields.io/badge/JJWT-a4a4a4.svg?&style=for-the-badge&logo=jjwt&logoColor=black" target="_blank"></a>
 
 <a href="https://www.postgresql.org/" target="_blank"><img src="https://img.shields.io/badge/PostgreSQL-4169E1.svg?&style=for-the-badge&logo=postgresql&logoColor=white" target="_blank"></a>
 <a href="https://www.docker.com/" target="_blank"><img src="https://img.shields.io/badge/Docker-2496ED.svg?&style=for-the-badge&logo=docker&logoColor=white" target="_blank"></a>

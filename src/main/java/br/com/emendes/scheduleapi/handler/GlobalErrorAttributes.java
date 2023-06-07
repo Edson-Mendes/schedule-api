@@ -4,7 +4,7 @@ import br.com.emendes.scheduleapi.exception.PasswordsDoNotMatch;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.support.WebExchangeBindException;
@@ -32,18 +32,32 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
       String messages = exception.getFieldErrors().stream().map(FieldError::getDefaultMessage)
           .collect(Collectors.joining("; "));
 
-      errorAttributes.put("error", "Invalid fields");
-      errorAttributes.put("fields", fields);
-      errorAttributes.put("messages", messages);
+      putFields(400, "Invalid field(s)", "Some fields are invalid",
+          Map.of("fields", fields, "messages", messages),
+          errorAttributes);
     } else if (throwable instanceof PasswordsDoNotMatch exception) {
-      errorAttributes.put("message", exception.getMessage());
-      errorAttributes.put("error", "Password do not match");
-      errorAttributes.put("status", 400);
+      putFields(400, "Password do not match", exception.getMessage(), errorAttributes);
     } else if (throwable instanceof ResponseStatusException exception) {
-      errorAttributes.put("message", exception.getReason());
+      putFields(exception.getStatusCode().value(), "Bad request", exception.getReason(), errorAttributes);
+    } else if (throwable instanceof BadCredentialsException exception) {
+      putFields(400, exception.getMessage(), "Wrong E-mail or password", errorAttributes);
     }
 
     return errorAttributes;
+  }
+
+  private void putFields(int status, String error, String message, Map<String, Object> errorAttributes) {
+    putFields(status, error, message, null, errorAttributes);
+  }
+
+  private void putFields(int status, String error, String message, Map<String, Object> extraFields, Map<String, Object> errorAttributes) {
+    errorAttributes.put("status", status);
+    errorAttributes.put("error", error);
+    errorAttributes.put("message", message);
+
+    if (extraFields != null) {
+      errorAttributes.putAll(extraFields);
+    }
   }
 
 }
