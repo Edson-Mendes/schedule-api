@@ -1,0 +1,14 @@
+-- POST /api/auth
+curl -i \
+-d '{"email": "lorem@email.com", "password": "1234567890"}' \
+-H "Content-Type: application/json" \
+-X POST http://localhost:8080/api/auth
+
+-- GET /api/users without authorization header.
+curl -i \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJTY2hlZHVsZSBBUEkiLCJzdWIiOiJsb3JlbUBlbWFpbC5jb20iLCJpYXQiOjE2ODYxNTc5NTcsImV4cCI6MTY4NjI0NDM1N30.tvf7WseuT0ZEtv_WUj87iULwflbhgWyaYfQOColXOEY" \
+-X GET http://localhost:8080/api/users
+
+-- GET /api/users with authorization header.
+curl -i \
+-X GET http://localhost:8080/api/users

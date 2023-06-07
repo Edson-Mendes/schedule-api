@@ -1,55 +1,43 @@
 package br.com.emendes.scheduleapi.config.security;
 
-import br.com.emendes.scheduleapi.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
+import br.com.emendes.scheduleapi.config.security.filter.JWTAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 /**
  * Configurações de segurança.
  */
-@Slf4j
+@RequiredArgsConstructor
 @EnableWebFluxSecurity
 @Configuration
 public class SecurityConfig {
 
-  @Bean
-  public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-    http.csrf().disable();
+  private final JWTAuthenticationFilter jwtAuthenticationFilter;
 
-    http.authorizeExchange().anyExchange().permitAll();
+  private static final String[] POST_WHITELIST = {"/api/auth", "/api/users"};
+
+  @Bean
+  public SecurityWebFilterChain securityWebFilterChain(
+      ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager) {
+    http.csrf().disable()
+        .httpBasic().disable();
+
+    http.authenticationManager(authenticationManager)
+        .addFilterBefore(jwtAuthenticationFilter, SecurityWebFiltersOrder.HTTP_BASIC);
+
+    http.authorizeExchange()
+        .pathMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
+        .anyExchange().authenticated();
 
     return http.build();
   }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-  }
-
-  @Bean
-  public ReactiveUserDetailsService userDetailsService(UserRepository userRepository) {
-    return username -> {
-      log.info("Searching for user with email: {}", username);
-      return userRepository.findByEmail(username);
-    };
-  }
-
-  @Bean
-  public ReactiveAuthenticationManager reactiveAuthenticationManager(
-      ReactiveUserDetailsService userDetailsService,
-      PasswordEncoder passwordEncoder) {
-    var authenticationManager = new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
-    authenticationManager.setPasswordEncoder(passwordEncoder);
-    return authenticationManager;
-  }
 
 }
