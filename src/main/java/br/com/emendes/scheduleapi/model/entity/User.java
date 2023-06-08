@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Entidade User, refere-se a tabela t_user no banco de dados.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

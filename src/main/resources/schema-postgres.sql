@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS t_user (
     CONSTRAINT t_user_email_unique UNIQUE (email)
 );
 
--- Table Commitment
-CREATE TABLE IF NOT EXISTS t_commitment (
+-- Table Event
+CREATE TABLE IF NOT EXISTS t_event (
     id bigserial NOT NULL,
     title varchar(100) NOT NULL,
     description varchar(255),

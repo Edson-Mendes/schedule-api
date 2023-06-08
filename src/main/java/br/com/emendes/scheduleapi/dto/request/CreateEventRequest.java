@@ -6,12 +6,12 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
- * Record DTO para receber dados de criação de Commitment no corpo da requisição.
- * @param title do Commitment
- * @param description do Commitment
- * @param dateTime do Commitment, deve ser no formato yyyy-MM-dd'T'HH:mm:ss
+ * Record DTO para receber dados de criação de Event no corpo da requisição.
+ * @param title do Event
+ * @param description do Event
+ * @param dateTime do Event, deve ser no formato yyyy-MM-dd'T'HH:mm:ss
  */
-public record CreateCommitmentRequest(
+public record CreateEventRequest(
 
     @NotBlank(message = "title must not be blank")
     @Size(min = 1, max = 100, message = "title must contains between {min} and {max} characters long")
