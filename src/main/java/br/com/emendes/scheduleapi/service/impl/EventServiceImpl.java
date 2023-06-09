@@ -1,5 +1,6 @@
 package br.com.emendes.scheduleapi.service.impl;
 
+import br.com.emendes.scheduleapi.component.AuthenticationFacade;
 import br.com.emendes.scheduleapi.dto.request.CreateEventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
 import br.com.emendes.scheduleapi.mapper.EventMapper;
@@ -19,16 +20,19 @@ public class EventServiceImpl implements EventService {
 
   private final EventRepository eventRepository;
   private final EventMapper eventMapper;
+  private final AuthenticationFacade authenticationFacade;
 
   @Override
   public Mono<EventResponse> create(CreateEventRequest eventRequest) {
     Event event = eventMapper.toEvent(eventRequest);
 
-    // TODO: Buscar o id do User da requisição.
-
-    // TODO: Settar o id do User em Event.user_id.
-
-    return eventRepository.save(event)
+    return authenticationFacade.getCurrentUser()
+        .map(user -> {
+          event.setUserId(user.getId());
+          event.setUser(user);
+          return event;
+        })
+        .flatMap(eventRepository::save)
         .map(eventMapper::toEventResponse);
   }
 
