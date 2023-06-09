@@ -1,8 +1,8 @@
 package br.com.emendes.scheduleapi.dto.request;
 
+import br.com.emendes.scheduleapi.validation.annotation.DateTimeValidation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
@@ -19,7 +19,7 @@ public record CreateEventRequest(
     @Size(max = 255, message = "description must contains max {max} characters long")
     String description,
     @NotBlank(message = "date_time must not be blank")
-    @Pattern(regexp = "yyyy-MM-dd'T'HH:mm:ss", message = "date_time must be in yyyy-MM-dd'T'HH:mm:ss format")
+    @DateTimeValidation(message = "date_time must be on format {pattern}")
     @JsonProperty(value = "date_time")
     String dateTime
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 /**
- * Classe o qual é mapeado as requisições de /api/users.
+ * Controller o qual é mapeado as requisições de /api/users.
  */
 @RequiredArgsConstructor
 @RestController
@@ -20,7 +20,7 @@ public class UserController {
   private final UserService userService;
 
   /**
-   * Método que trata requisição POST /api/users.
+   * Trata requisição POST /api/users.
    * @param userRequest DTO que contém as informações do User a ser registrado.
    */
   @PostMapping

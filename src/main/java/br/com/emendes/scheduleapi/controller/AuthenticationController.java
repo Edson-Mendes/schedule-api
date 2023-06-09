@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 /**
- * Classe o qual é mapeado as requisições de /api/auth.
+ * Controller o qual é mapeado as requisições de /api/auth.
  */
 @RequiredArgsConstructor
 @RestController
