@@ -5,6 +5,7 @@ import br.com.emendes.scheduleapi.dto.request.CreateEventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
 import br.com.emendes.scheduleapi.mapper.EventMapper;
 import br.com.emendes.scheduleapi.model.entity.Event;
+import br.com.emendes.scheduleapi.model.entity.User;
 import br.com.emendes.scheduleapi.repository.EventRepository;
 import br.com.emendes.scheduleapi.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * Implementação de {@link EventService}
@@ -43,12 +45,23 @@ public class EventServiceImpl implements EventService {
   }
 
   @Override
-  public Flux<EventResponse> fetchAll(Pageable pageable) {
+  public Mono<Page<EventResponse>> fetchAll(Pageable pageable) {
     log.info("fetching page: {} and size: {}", pageable.getPageNumber(), pageable.getPageSize());
 
-    return authenticationFacade.getCurrentUser()
-        .flatMapMany(user -> eventRepository.findByUserId(user.getId(), pageable))
-        .map(eventMapper::toEventResponse);
+    Mono<Long> userIdMono = authenticationFacade.getCurrentUser()
+        .map(User::getId);
+
+    // Busca paginada de EventResponse por userId
+    Mono<List<EventResponse>> eventResponseListMono = userIdMono
+        .flatMapMany(userId -> eventRepository.findByUserId(userId, pageable))
+        .map(eventMapper::toEventResponse)
+        .collectList();
+
+    // Count events por userId
+    Mono<Long> countByUserIdMono = userIdMono.flatMap(eventRepository::countByUserId);
+
+    return Mono.zip(eventResponseListMono, countByUserIdMono)
+        .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
   }
 
 }

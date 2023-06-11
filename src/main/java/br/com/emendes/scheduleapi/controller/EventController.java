@@ -2,13 +2,13 @@ package br.com.emendes.scheduleapi.controller;
 
 import br.com.emendes.scheduleapi.dto.request.CreateEventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
-import br.com.emendes.scheduleapi.service.EventService;
+import br.com.emendes.scheduleapi.service.impl.EventServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/events")
 public class EventController {
 
-  private final EventService eventService;
+  private final EventServiceImpl eventService;
 
   /**
    * Trata requisição POST /api/events.
@@ -40,7 +40,7 @@ public class EventController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public Flux<EventResponse> fetchAll(
+  public Mono<Page<EventResponse>> fetchAll(
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "10") int size) {
     return eventService.fetchAll(PageRequest.of(page, size));

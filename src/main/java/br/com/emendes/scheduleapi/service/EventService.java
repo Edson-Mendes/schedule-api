@@ -2,8 +2,8 @@ package br.com.emendes.scheduleapi.service;
 
 import br.com.emendes.scheduleapi.dto.request.CreateEventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -22,6 +22,6 @@ public interface EventService {
   /**
    * Busca paginada de Events relacionadas com o usuário atual.
    */
-  Flux<EventResponse> fetchAll(Pageable pageable);
+  Mono<Page<EventResponse>> fetchAll(Pageable pageable);
 
 }
