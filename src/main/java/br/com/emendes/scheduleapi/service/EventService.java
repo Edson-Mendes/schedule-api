@@ -39,4 +39,10 @@ public interface EventService {
    */
   Mono<Void> update(Long eventId, EventRequest eventRequest);
 
+  /**
+   * Deleta um Event por id.
+   * @param eventId identificador do Event.
+   */
+  Mono<Void> delete(Long eventId);
+
 }

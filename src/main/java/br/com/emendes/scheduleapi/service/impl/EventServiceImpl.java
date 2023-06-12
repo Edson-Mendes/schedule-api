@@ -90,6 +90,17 @@ public class EventServiceImpl implements EventService {
   }
 
   /**
+   * @throws ResourceNotFoundException se Event não for encontrado para o current User e eventId.
+   */
+  @Override
+  public Mono<Void> delete(Long eventId) {
+    log.info("Attempt to delete event with id: {}", eventId);
+
+    return findEventById(eventId)
+        .flatMap(eventRepository::delete);
+  }
+
+  /**
    * Busca Event por id e pelo current User.
    * @param eventId identificador do Event.
    * @return Em caso de sucesso, retorna Mono of Event encontrado, e Mono of Error caso contrário.

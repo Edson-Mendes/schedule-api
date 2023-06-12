@@ -57,10 +57,27 @@ public class EventController {
     return eventService.findById(eventId);
   }
 
+  /**
+   * Trata requisição PUT /api/events/{eventId}.
+   *
+   * @param eventId identificador do Event.
+   * @param eventRequest DTO contendo as novas informações do Event.
+   */
   @PutMapping("/{eventId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public Mono<Void> update(@PathVariable(name = "eventId") Long eventId, @Valid @RequestBody EventRequest eventRequest) {
     return eventService.update(eventId, eventRequest);
+  }
+
+  /**
+   * Trata requisição DELETE /api/events/{eventId}.
+   *
+   * @param eventId identificador do Event.
+   */
+  @DeleteMapping("/{eventId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public Mono<Void> delete(@PathVariable(name = "eventId") Long eventId) {
+    return eventService.delete(eventId);
   }
 
 }
