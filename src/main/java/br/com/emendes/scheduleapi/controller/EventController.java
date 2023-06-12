@@ -65,9 +65,13 @@ public class EventController {
    */
   @GetMapping("/{eventId}/{date}")
   @ResponseStatus(HttpStatus.OK)
-  public Flux<EventResponse> findByDate(@PathVariable(name = "eventId") Long eventId, @PathVariable(name = "date") String date) {
+  public Mono<Page<EventResponse>> findByDate(
+      @PathVariable(name = "eventId") Long eventId,
+      @PathVariable(name = "date") String date,
+      @RequestParam(name = "page", defaultValue = "0") int page,
+      @RequestParam(name = "size", defaultValue = "10") int size) {
     // FIXME: ajeitar date de modo que seja um request param.
-    return eventService.findByDate(date);
+    return eventService.findByDate(date, page, size);
   }
 
   /**

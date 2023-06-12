@@ -3,14 +3,12 @@ package br.com.emendes.scheduleapi.repository;
 import br.com.emendes.scheduleapi.model.entity.Event;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Interface repository com as abstrações para persistência do recurso Event.
@@ -40,7 +38,24 @@ public interface EventRepository extends ReactiveCrudRepository<Event, Long>, Re
    */
   Mono<Event> findByIdAndUserId(Long eventId, Long userId);
 
-  @Query("SELECT * FROM t_event te WHERE DATE(te.event_date) = :eventDate AND te.user_id = :userId")
-  Flux<Event> findByDate(Long userId, LocalDate eventDate);
+  /**
+   * Busca Flux of events por userId, eventDate (yyyy-MM-dd), limit e offset.
+   * @param userId identificador do User
+   * @param eventDate data do Event no formato (yyyy-MM-dd)
+   * @param limit limit a ser buscado
+   * @param offset offset a ser buscado
+   * @return Flux of Event
+   */
+  @Query("SELECT * FROM t_event te WHERE DATE(te.event_date) = :eventDate AND te.user_id = :userId LIMIT :limit OFFSET :offset")
+  Flux<Event> findByDate(Long userId, LocalDate eventDate, int limit, int offset);
+
+  /**
+   * Conta quantos events um User possui em dada data.
+   * @param userId id do User
+   * @param eventDate data a ser contada.
+   * @return Número de Event que o User possui em dada data.
+   */
+  @Query("SELECT count(*) FROM t_event te WHERE DATE(te.event_date) = :eventDate AND te.user_id = :userId")
+  Mono<Long> countByUserIdAndDate(Long userId, LocalDate eventDate);
 
 }

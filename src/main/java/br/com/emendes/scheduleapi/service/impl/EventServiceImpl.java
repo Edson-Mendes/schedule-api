@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -79,15 +80,22 @@ public class EventServiceImpl implements EventService {
   }
 
   @Override
-  public Flux<EventResponse> findByDate(String date) {
-    log.info("fetching events for date: {}", date);
+  public Mono<Page<EventResponse>> findByDate(String date, int page, int size) {
+    log.info("fetching page: {} and size: {} of events with date: {}", page, size, date);
 
     LocalDate localDate = LocalDate.parse(date);
 
-    return authenticationFacade.getCurrentUser()
-        .map(User::getId)
-        .flatMapMany(userId -> eventRepository.findByDate(userId, localDate))
-        .map(eventMapper::toEventResponse);
+    Mono<Long> userIdMono = authenticationFacade.getCurrentUser().map(User::getId);
+
+    Mono<List<EventResponse>> eventResponseListMono = userIdMono
+        .flatMapMany(userId -> eventRepository.findByDate(userId, localDate, size, page*size))
+        .map(eventMapper::toEventResponse)
+        .collectList();
+
+    Mono<Long> countMono = userIdMono.flatMap(userId -> eventRepository.countByUserIdAndDate(userId, localDate));
+
+    return Mono.zip(eventResponseListMono, countMono)
+        .map(tuple -> new PageImpl<>(tuple.getT1(), PageRequest.of(page, size), tuple.getT2()));
   }
 
   /**

@@ -36,8 +36,10 @@ public interface EventService {
   /**
    * Busca paginada de Event por data (yyyy-MM-dd)
    * @param date Data no formato yyyy-MM-dd
+   * @param page Número da página requerida
+   * @param size Tamanho da página requerida.
    */
-  Flux<EventResponse> findByDate(String date);
+  Mono<Page<EventResponse>> findByDate(String date, int page, int size);
 
   /**
    * Atualiza um Event por id.
