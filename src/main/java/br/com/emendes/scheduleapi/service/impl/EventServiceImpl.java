@@ -15,8 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -73,6 +75,18 @@ public class EventServiceImpl implements EventService {
   @Override
   public Mono<EventResponse> findById(Long eventId) {
     return findEventById(eventId)
+        .map(eventMapper::toEventResponse);
+  }
+
+  @Override
+  public Flux<EventResponse> findByDate(String date) {
+    log.info("fetching events for date: {}", date);
+
+    LocalDate localDate = LocalDate.parse(date);
+
+    return authenticationFacade.getCurrentUser()
+        .map(User::getId)
+        .flatMapMany(userId -> eventRepository.findByDate(userId, localDate))
         .map(eventMapper::toEventResponse);
   }
 

@@ -22,7 +22,7 @@ public class Event {
   private Long id;
   private String title;
   private String description;
-  private LocalDateTime date;
+  private LocalDateTime eventDate;
   private Long userId;
   @Transient
   private User user;

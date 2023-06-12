@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -55,6 +56,18 @@ public class EventController {
   @ResponseStatus(HttpStatus.OK)
   public Mono<EventResponse> findById(@PathVariable(name = "eventId") Long eventId) {
     return eventService.findById(eventId);
+  }
+
+  /**
+   * Trata requisição GET /api/events/{date}.
+   *
+   * @param date Data dos Event.
+   */
+  @GetMapping("/{eventId}/{date}")
+  @ResponseStatus(HttpStatus.OK)
+  public Flux<EventResponse> findByDate(@PathVariable(name = "eventId") Long eventId, @PathVariable(name = "date") String date) {
+    // FIXME: ajeitar date de modo que seja um request param.
+    return eventService.findByDate(date);
   }
 
   /**

@@ -24,7 +24,7 @@ public class EventMapperImpl implements EventMapper {
     return Event.builder()
         .title(eventRequest.title())
         .description(eventRequest.description())
-        .date(toLocalDateTime(eventRequest.dateTime()))
+        .eventDate(toLocalDateTime(eventRequest.dateTime()))
         .build();
   }
 
@@ -39,7 +39,7 @@ public class EventMapperImpl implements EventMapper {
         .id(event.getId())
         .title(event.getTitle())
         .description(event.getDescription())
-        .dateTime(event.getDate())
+        .dateTime(event.getEventDate())
         .userId(event.getUserId())
         .build();
   }
@@ -54,7 +54,7 @@ public class EventMapperImpl implements EventMapper {
 
     event.setTitle(eventRequest.title());
     event.setDescription(eventRequest.description());
-    event.setDate(toLocalDateTime(eventRequest.dateTime()));
+    event.setEventDate(toLocalDateTime(eventRequest.dateTime()));
   }
 
   private LocalDateTime toLocalDateTime(String dateTime) {

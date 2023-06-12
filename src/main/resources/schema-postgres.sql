@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS t_event (
     id bigserial NOT NULL,
     title varchar(100) NOT NULL,
     description varchar(255),
-    date timestamp NOT NULL,
+    event_date timestamp NOT NULL,
     user_id bigint NOT NULL,
     CONSTRAINT t_commitment_id_pk PRIMARY KEY (id),
     CONSTRAINT t_commitment_user_id_fk FOREIGN KEY (user_id) REFERENCES t_user(id)

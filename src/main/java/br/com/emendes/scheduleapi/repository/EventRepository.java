@@ -2,10 +2,15 @@ package br.com.emendes.scheduleapi.repository;
 
 import br.com.emendes.scheduleapi.model.entity.Event;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Interface repository com as abstrações para persistência do recurso Event.
@@ -34,4 +39,8 @@ public interface EventRepository extends ReactiveCrudRepository<Event, Long>, Re
    * @return Mono of Event.
    */
   Mono<Event> findByIdAndUserId(Long eventId, Long userId);
+
+  @Query("SELECT * FROM t_event te WHERE DATE(te.event_date) = :eventDate AND te.user_id = :userId")
+  Flux<Event> findByDate(Long userId, LocalDate eventDate);
+
 }

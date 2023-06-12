@@ -4,6 +4,7 @@ import br.com.emendes.scheduleapi.dto.request.EventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -31,6 +32,12 @@ public interface EventService {
    * @return Mono of EventResponse.
    */
   Mono<EventResponse> findById(Long eventId);
+
+  /**
+   * Busca paginada de Event por data (yyyy-MM-dd)
+   * @param date Data no formato yyyy-MM-dd
+   */
+  Flux<EventResponse> findByDate(String date);
 
   /**
    * Atualiza um Event por id.
