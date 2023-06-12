@@ -1,6 +1,6 @@
 package br.com.emendes.scheduleapi.controller;
 
-import br.com.emendes.scheduleapi.dto.request.CreateEventRequest;
+import br.com.emendes.scheduleapi.dto.request.EventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
 import br.com.emendes.scheduleapi.service.impl.EventServiceImpl;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class EventController {
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Mono<EventResponse> create(@Valid @RequestBody CreateEventRequest eventRequest) {
+  public Mono<EventResponse> create(@Valid @RequestBody EventRequest eventRequest) {
     return eventService.create(eventRequest);
   }
 
@@ -55,6 +55,12 @@ public class EventController {
   @ResponseStatus(HttpStatus.OK)
   public Mono<EventResponse> findById(@PathVariable(name = "eventId") Long eventId) {
     return eventService.findById(eventId);
+  }
+
+  @PutMapping("/{eventId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public Mono<Void> update(@PathVariable(name = "eventId") Long eventId, @Valid @RequestBody EventRequest eventRequest) {
+    return eventService.update(eventId, eventRequest);
   }
 
 }

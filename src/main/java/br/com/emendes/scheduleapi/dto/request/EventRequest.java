@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
  * @param description do Event
  * @param dateTime do Event, deve ser no formato yyyy-MM-dd'T'HH:mm:ss
  */
-public record CreateEventRequest(
+public record EventRequest(
 
     @NotBlank(message = "title must not be blank")
     @Size(min = 1, max = 100, message = "title must contains between {min} and {max} characters long")

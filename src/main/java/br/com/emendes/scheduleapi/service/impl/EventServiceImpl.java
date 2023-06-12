@@ -1,7 +1,7 @@
 package br.com.emendes.scheduleapi.service.impl;
 
 import br.com.emendes.scheduleapi.component.AuthenticationFacade;
-import br.com.emendes.scheduleapi.dto.request.CreateEventRequest;
+import br.com.emendes.scheduleapi.dto.request.EventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
 import br.com.emendes.scheduleapi.exception.ResourceNotFoundException;
 import br.com.emendes.scheduleapi.mapper.EventMapper;
@@ -32,7 +32,7 @@ public class EventServiceImpl implements EventService {
   private final AuthenticationFacade authenticationFacade;
 
   @Override
-  public Mono<EventResponse> create(CreateEventRequest eventRequest) {
+  public Mono<EventResponse> create(EventRequest eventRequest) {
     Event event = eventMapper.toEvent(eventRequest);
 
     log.info("Attempt to create a Event");
@@ -74,6 +74,19 @@ public class EventServiceImpl implements EventService {
   public Mono<EventResponse> findById(Long eventId) {
     return findEventById(eventId)
         .map(eventMapper::toEventResponse);
+  }
+
+  /**
+   * @throws ResourceNotFoundException se Event não for encontrado para o current User e eventId.
+   */
+  @Override
+  public Mono<Void> update(Long eventId, EventRequest eventRequest) {
+    log.info("Attempt to update event with id: {}", eventId);
+
+    return findEventById(eventId)
+        .doOnNext(event -> eventMapper.merge(event, eventRequest))
+        .flatMap(eventRepository::save)
+        .then();
   }
 
   /**
