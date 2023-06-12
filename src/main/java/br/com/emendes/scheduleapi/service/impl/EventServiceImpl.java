@@ -3,6 +3,7 @@ package br.com.emendes.scheduleapi.service.impl;
 import br.com.emendes.scheduleapi.component.AuthenticationFacade;
 import br.com.emendes.scheduleapi.dto.request.CreateEventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
+import br.com.emendes.scheduleapi.exception.ResourceNotFoundException;
 import br.com.emendes.scheduleapi.mapper.EventMapper;
 import br.com.emendes.scheduleapi.model.entity.Event;
 import br.com.emendes.scheduleapi.model.entity.User;
@@ -34,6 +35,8 @@ public class EventServiceImpl implements EventService {
   public Mono<EventResponse> create(CreateEventRequest eventRequest) {
     Event event = eventMapper.toEvent(eventRequest);
 
+    log.info("Attempt to create a Event");
+
     return authenticationFacade.getCurrentUser()
         .map(user -> {
           event.setUserId(user.getId());
@@ -46,7 +49,7 @@ public class EventServiceImpl implements EventService {
 
   @Override
   public Mono<Page<EventResponse>> fetchAll(Pageable pageable) {
-    log.info("fetching page: {} and size: {}", pageable.getPageNumber(), pageable.getPageSize());
+    log.info("fetching page: {} and size: {} of events", pageable.getPageNumber(), pageable.getPageSize());
 
     Mono<Long> userIdMono = authenticationFacade.getCurrentUser()
         .map(User::getId);
@@ -62,6 +65,30 @@ public class EventServiceImpl implements EventService {
 
     return Mono.zip(eventResponseListMono, countByUserIdMono)
         .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+  }
+
+  /**
+   * @throws ResourceNotFoundException se Event não for encontrado para o current User e eventId.
+   */
+  @Override
+  public Mono<EventResponse> findById(Long eventId) {
+    return findEventById(eventId)
+        .map(eventMapper::toEventResponse);
+  }
+
+  /**
+   * Busca Event por id e pelo current User.
+   * @param eventId identificador do Event.
+   * @return Em caso de sucesso, retorna Mono of Event encontrado, e Mono of Error caso contrário.
+   */
+  private Mono<Event> findEventById(Long eventId) {
+    log.info("Searching for event with id: {}", eventId);
+
+    return authenticationFacade.getCurrentUser()
+        .flatMap(user -> eventRepository
+            .findByIdAndUserId(eventId, user.getId())
+            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Event not found for id: " + eventId)))
+        );
   }
 
 }

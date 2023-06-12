@@ -1,6 +1,7 @@
 package br.com.emendes.scheduleapi.handler;
 
 import br.com.emendes.scheduleapi.exception.PasswordsDoNotMatch;
+import br.com.emendes.scheduleapi.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
@@ -37,6 +38,8 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
           errorAttributes);
     } else if (throwable instanceof PasswordsDoNotMatch exception) {
       putFields(400, "Password do not match", exception.getMessage(), errorAttributes);
+    } else if (throwable instanceof ResourceNotFoundException exception) {
+      putFields(404, "Resource not found", exception.getMessage(), errorAttributes);
     } else if (throwable instanceof ResponseStatusException exception) {
       putFields(exception.getStatusCode().value(), "Bad request", exception.getReason(), errorAttributes);
     } else if (throwable instanceof BadCredentialsException exception) {

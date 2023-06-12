@@ -46,4 +46,15 @@ public class EventController {
     return eventService.fetchAll(PageRequest.of(page, size));
   }
 
+  /**
+   * Trata requisição GET /api/events/{eventId}.
+   *
+   * @param eventId identificador do Event.
+   */
+  @GetMapping("/{eventId}")
+  @ResponseStatus(HttpStatus.OK)
+  public Mono<EventResponse> findById(@PathVariable(name = "eventId") Long eventId) {
+    return eventService.findById(eventId);
+  }
+
 }

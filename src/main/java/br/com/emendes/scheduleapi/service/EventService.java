@@ -24,4 +24,12 @@ public interface EventService {
    */
   Mono<Page<EventResponse>> fetchAll(Pageable pageable);
 
+  /**
+   * Busca Event por User e Event#id.
+   *
+   * @param eventId identificador do Event.
+   * @return Mono of EventResponse.
+   */
+  Mono<EventResponse> findById(Long eventId);
+
 }
