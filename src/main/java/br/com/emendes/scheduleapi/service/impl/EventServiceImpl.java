@@ -72,18 +72,12 @@ public class EventServiceImpl implements EventService {
         .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
   }
 
-  /**
-   * @throws ResourceNotFoundException se Event não for encontrado para o current User e eventId.
-   */
   @Override
   public Mono<EventResponse> findById(Long eventId) {
     return findEventById(eventId)
         .map(eventMapper::toEventResponse);
   }
 
-  /**
-   * @throws DateTimeParseException se date não puder ser parseado para LocalDate.
-   */
   @Override
   public Mono<Page<EventResponse>> findByDate(String date, int page, int size) {
     log.info("fetching page: {} and size: {} of events with date: {}", page, size, date);
@@ -93,7 +87,7 @@ public class EventServiceImpl implements EventService {
     Mono<Long> userIdMono = authenticationFacade.getCurrentUser().map(User::getId);
 
     Mono<List<EventResponse>> eventResponseListMono = userIdMono
-        .flatMapMany(userId -> eventRepository.findByDate(userId, localDate, size, page*size))
+        .flatMapMany(userId -> eventRepository.findByDate(userId, localDate, size, page * size))
         .map(eventMapper::toEventResponse)
         .collectList();
 
@@ -103,9 +97,6 @@ public class EventServiceImpl implements EventService {
         .map(tuple -> new PageImpl<>(tuple.getT1(), PageRequest.of(page, size), tuple.getT2()));
   }
 
-  /**
-   * @throws ResourceNotFoundException se Event não for encontrado para o current User e eventId.
-   */
   @Override
   public Mono<Void> update(Long eventId, EventRequest eventRequest) {
     log.info("Attempt to update event with id: {}", eventId);
@@ -116,9 +107,6 @@ public class EventServiceImpl implements EventService {
         .then();
   }
 
-  /**
-   * @throws ResourceNotFoundException se Event não for encontrado para o current User e eventId.
-   */
   @Override
   public Mono<Void> delete(Long eventId) {
     log.info("Attempt to delete event with id: {}", eventId);
@@ -129,8 +117,10 @@ public class EventServiceImpl implements EventService {
 
   /**
    * Busca Event por id e pelo current User.
+   *
    * @param eventId identificador do Event.
    * @return Em caso de sucesso, retorna Mono of Event encontrado, e Mono of Error caso contrário.
+   * @throws ResourceNotFoundException se Event não for encontrado para o current User e eventId.
    */
   private Mono<Event> findEventById(Long eventId) {
     log.info("Searching for event with id: {}", eventId);

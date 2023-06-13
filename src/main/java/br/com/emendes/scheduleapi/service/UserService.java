@@ -17,4 +17,11 @@ public interface UserService {
    */
   Mono<UserResponse> register(RegisterUserRequest userRequest);
 
+  /**
+   * Busca Event por User e Event#id. Usuário comum só pode buscar a si mesmo.
+   *
+   * @param userId Identificador do User a ser buscado.
+   * @return Mono of UserResponse contendo as informações do usuário encontrado.
+   */
+  Mono<UserResponse> findById(Long userId);
 }

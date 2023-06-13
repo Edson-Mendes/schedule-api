@@ -29,4 +29,10 @@ public class UserController {
     return userService.register(userRequest);
   }
 
+  @GetMapping("/{userId}")
+  @ResponseStatus(HttpStatus.OK)
+  public Mono<UserResponse> findById(@PathVariable(name = "userId") Long userId) {
+    return userService.findById(userId);
+  }
+
 }
