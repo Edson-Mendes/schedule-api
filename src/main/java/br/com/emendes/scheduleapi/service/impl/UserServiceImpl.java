@@ -68,19 +68,12 @@ public class UserServiceImpl implements UserService {
 
     return authenticationFacade.getCurrentUser()
         .doOnNext(user -> {
-          if (!isSameUserId(userId, user)) {
+          if (!thisUserCanFetch(user, userId)) {
             throw new ResourceNotFoundException("User not found for id: " + userId);
           }
         })
-        .flatMap(user -> findUserById(user.getId()))
+        .flatMap(user -> findUserById(userId))
         .map(userMapper::toUserResponse);
-  }
-
-  /**
-   * Verifica se userId fornecido é igual ao id do User.
-   */
-  private boolean isSameUserId(Long userId, User user) {
-    return user.getId().equals(userId);
   }
 
   /**
@@ -93,6 +86,24 @@ public class UserServiceImpl implements UserService {
   private Mono<User> findUserById(Long userId) {
     return userRepository.findById(userId)
         .switchIfEmpty(Mono.error(new ResourceNotFoundException("User not found for id: " + userId)));
+  }
+
+  /**
+   * Verifica se userId fornecido é igual ao id do User.
+   */
+  private boolean isSameUserId(User user, Long userId) {
+    return user.getId().equals(userId);
+  }
+
+  /**
+   * Verifica se o dado user pode buscar User por userId.
+   *
+   * @param user A ser verificado se tem permissão para buscar.
+   * @param userId identificador do User que será buscado.
+   * @return true se o user possui permissão para buscar, false caso contrário.
+   */
+  private boolean thisUserCanFetch(User user, Long userId) {
+    return isSameUserId(user, userId) || user.isAdmin();
   }
 
 }
