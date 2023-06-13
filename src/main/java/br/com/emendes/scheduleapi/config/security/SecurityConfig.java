@@ -34,6 +34,7 @@ public class SecurityConfig {
 
     http.authorizeExchange()
         .pathMatchers(HttpMethod.POST, POST_WHITELIST).permitAll()
+        .pathMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
         .anyExchange().authenticated();
 
     return http.build();

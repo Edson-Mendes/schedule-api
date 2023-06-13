@@ -11,6 +11,10 @@ import br.com.emendes.scheduleapi.repository.UserRepository;
 import br.com.emendes.scheduleapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,6 +47,19 @@ public class UserServiceImpl implements UserService {
     return userRepository.save(user)
         .onErrorResume(e -> Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "E-mail already in use")))
         .map(userMapper::toUserResponse);
+  }
+
+  @Override
+  public Mono<Page<UserResponse>> fetchAll(int page, int size) {
+    log.info("fetching page: {} and size: {} of events", page, size);
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    return userRepository.findBy(pageable)
+        .map(userMapper::toUserResponse)
+        .collectList()
+        .zipWith(userRepository.count())
+        .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
   }
 
   @Override
