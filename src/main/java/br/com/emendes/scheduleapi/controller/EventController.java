@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -34,17 +33,22 @@ public class EventController {
   }
 
   /**
-   * Trata requisição GET /api/events?page={page}&size={size}.
+   * Trata requisição GET /api/events?page={page}&size={size}&date={date}.
    *
    * @param page Número da página a ser buscada, valor padrão é 0.
    * @param size Tamanho da página a ser buscada, valor padrão é 10.
+   * @param date Data dos Events (opcional).
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public Mono<Page<EventResponse>> fetchAll(
+  public Mono<Page<EventResponse>> fetch(
+      @RequestParam(name = "date", required = false) String date,
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "10") int size) {
-    return eventService.fetchAll(PageRequest.of(page, size));
+    if (date == null)
+      return eventService.fetchAll(PageRequest.of(page, size));
+    else
+      return eventService.findByDate(date, page, size);
   }
 
   /**
@@ -59,25 +63,9 @@ public class EventController {
   }
 
   /**
-   * Trata requisição GET /api/events/{date}.
-   *
-   * @param date Data dos Event.
-   */
-  @GetMapping("/{eventId}/{date}")
-  @ResponseStatus(HttpStatus.OK)
-  public Mono<Page<EventResponse>> findByDate(
-      @PathVariable(name = "eventId") Long eventId,
-      @PathVariable(name = "date") String date,
-      @RequestParam(name = "page", defaultValue = "0") int page,
-      @RequestParam(name = "size", defaultValue = "10") int size) {
-    // FIXME: ajeitar date de modo que seja um request param.
-    return eventService.findByDate(date, page, size);
-  }
-
-  /**
    * Trata requisição PUT /api/events/{eventId}.
    *
-   * @param eventId identificador do Event.
+   * @param eventId      identificador do Event.
    * @param eventRequest DTO contendo as novas informações do Event.
    */
   @PutMapping("/{eventId}")

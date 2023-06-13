@@ -12,6 +12,7 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,8 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
       putFields(exception.getStatusCode().value(), "Bad request", exception.getReason(), errorAttributes);
     } else if (throwable instanceof BadCredentialsException exception) {
       putFields(400, exception.getMessage(), "Wrong E-mail or password", errorAttributes);
+    } else if (throwable instanceof DateTimeParseException exception) {
+      putFields(400, String.format("Text '%s' can not be parsed", exception.getParsedString()), "Bad request", errorAttributes);
     }
 
     return errorAttributes;

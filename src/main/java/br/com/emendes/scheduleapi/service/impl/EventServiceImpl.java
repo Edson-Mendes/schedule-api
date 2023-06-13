@@ -16,10 +16,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -79,6 +79,9 @@ public class EventServiceImpl implements EventService {
         .map(eventMapper::toEventResponse);
   }
 
+  /**
+   * @throws DateTimeParseException se date não puder ser parseado para LocalDate.
+   */
   @Override
   public Mono<Page<EventResponse>> findByDate(String date, int page, int size) {
     log.info("fetching page: {} and size: {} of events with date: {}", page, size, date);
