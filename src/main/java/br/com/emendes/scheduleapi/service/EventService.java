@@ -3,8 +3,6 @@ package br.com.emendes.scheduleapi.service;
 import br.com.emendes.scheduleapi.dto.request.EventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -22,8 +20,11 @@ public interface EventService {
 
   /**
    * Busca paginada de Events relacionadas com o usuário atual.
+   *
+   * @param page Página a ser buscada.
+   * @param size Tamanho da página a ser buscada.
    */
-  Mono<Page<EventResponse>> fetchAll(Pageable pageable);
+  Mono<Page<EventResponse>> fetchAll(int page, int size);
 
   /**
    * Busca Event por User e Event#id.
@@ -35,6 +36,7 @@ public interface EventService {
 
   /**
    * Busca paginada de Event por data (yyyy-MM-dd)
+   *
    * @param date Data no formato yyyy-MM-dd
    * @param page Número da página requerida
    * @param size Tamanho da página requerida.
@@ -43,13 +45,15 @@ public interface EventService {
 
   /**
    * Atualiza um Event por id.
-   * @param eventId identicador do Event.
+   *
+   * @param eventId      identicador do Event.
    * @param eventRequest DTO contendo as novas informações do Event.
    */
   Mono<Void> update(Long eventId, EventRequest eventRequest);
 
   /**
    * Deleta um Event por id.
+   *
    * @param eventId identificador do Event.
    */
   Mono<Void> delete(Long eventId);

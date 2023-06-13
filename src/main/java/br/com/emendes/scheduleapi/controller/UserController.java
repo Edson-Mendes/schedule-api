@@ -29,10 +29,4 @@ public class UserController {
     return userService.register(userRequest);
   }
 
-  @GetMapping
-  @ResponseStatus(HttpStatus.OK)
-  public Mono<String> fetch() {
-    return Mono.just("Hello world!");
-  }
-
 }

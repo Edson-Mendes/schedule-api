@@ -6,7 +6,6 @@ import br.com.emendes.scheduleapi.service.impl.EventServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -46,7 +45,7 @@ public class EventController {
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "10") int size) {
     if (date == null)
-      return eventService.fetchAll(PageRequest.of(page, size));
+      return eventService.fetchAll(page, size);
     else
       return eventService.findByDate(date, page, size);
   }

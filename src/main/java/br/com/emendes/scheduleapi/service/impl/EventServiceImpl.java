@@ -51,8 +51,10 @@ public class EventServiceImpl implements EventService {
   }
 
   @Override
-  public Mono<Page<EventResponse>> fetchAll(Pageable pageable) {
-    log.info("fetching page: {} and size: {} of events", pageable.getPageNumber(), pageable.getPageSize());
+  public Mono<Page<EventResponse>> fetchAll(int page, int size) {
+    log.info("fetching page: {} and size: {} of events", page, size);
+
+    Pageable pageable = PageRequest.of(page, size);
 
     Mono<Long> userIdMono = authenticationFacade.getCurrentUser()
         .map(User::getId);
