@@ -4,7 +4,6 @@ import br.com.emendes.scheduleapi.controller.swagger.UserControllerSwagger;
 import br.com.emendes.scheduleapi.dto.request.RegisterUserRequest;
 import br.com.emendes.scheduleapi.dto.response.UserResponse;
 import br.com.emendes.scheduleapi.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,7 @@ public class UserController implements UserControllerSwagger {
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Mono<UserResponse> register(@Valid @RequestBody RegisterUserRequest userRequest) {
+  public Mono<UserResponse> register(@RequestBody RegisterUserRequest userRequest) {
     return userService.register(userRequest);
   }
 

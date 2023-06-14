@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import reactor.core.publisher.Mono;
 
 /**
@@ -27,6 +28,6 @@ public interface AuthenticationControllerSwagger {
       @ApiResponse(responseCode = "400", description = "Something is wrong with the request",
           content = @Content)
   })
-  Mono<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest);
+  Mono<AuthenticationResponse> authenticate(@Valid AuthenticationRequest authenticationRequest);
 
 }

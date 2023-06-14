@@ -4,7 +4,6 @@ import br.com.emendes.scheduleapi.controller.swagger.AuthenticationControllerSwa
 import br.com.emendes.scheduleapi.dto.request.AuthenticationRequest;
 import br.com.emendes.scheduleapi.dto.response.AuthenticationResponse;
 import br.com.emendes.scheduleapi.service.AuthenticationService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,7 @@ public class AuthenticationController implements AuthenticationControllerSwagger
    */
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
-  public Mono<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
+  public Mono<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
     return authenticationService.authenticate(authenticationRequest);
   }
 

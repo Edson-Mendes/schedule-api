@@ -9,7 +9,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 import static br.com.emendes.scheduleapi.config.OpenAPIConfig.SECURITY_SCHEME_KEY;
@@ -17,6 +22,7 @@ import static br.com.emendes.scheduleapi.config.OpenAPIConfig.SECURITY_SCHEME_KE
 /**
  * Interface para manter as anotações do Swagger e não deixar UserController poluído.
  */
+@Validated
 @Tag(name = "User", description = "User management APIs")
 public interface UserControllerSwagger {
 
@@ -31,11 +37,11 @@ public interface UserControllerSwagger {
       @ApiResponse(responseCode = "400", description = "Something is wrong with the request",
           content = @Content)
   })
-  Mono<UserResponse> register(RegisterUserRequest userRequest);
+  Mono<UserResponse> register(@Valid RegisterUserRequest userRequest);
 
   @Operation(
       summary = "Fetch pageable Users",
-      description = "Fetch pageable of User's info that are id, name and email. Only Admin can fetch."+
+      description = "Fetch pageable of User's info that are id, name and email. Only Admin can fetch." +
           " Default value to page and size are 0 and 10, respectively.",
       tags = {"User"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)}
@@ -50,7 +56,10 @@ public interface UserControllerSwagger {
       @ApiResponse(responseCode = "403", description = "Forbidden, only ADMIN can access",
           content = @Content)
   })
-  Mono<Page<UserResponse>> fetchAll(int page, int size);
+  Mono<Page<UserResponse>> fetchAll(
+      @PositiveOrZero(message = "page must be greater than or equal to 0") int page,
+      @Min(value = 0, message = "size must be greater than or equal to {value}")
+      @Max(value = 100, message = "size must be less than or equal to {value}") int size);
 
   @Operation(
       summary = "find user by id",

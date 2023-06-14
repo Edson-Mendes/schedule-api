@@ -2,6 +2,8 @@ package br.com.emendes.scheduleapi.handler;
 
 import br.com.emendes.scheduleapi.exception.PasswordsDoNotMatch;
 import br.com.emendes.scheduleapi.exception.ResourceNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
@@ -37,6 +39,11 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
       putFields(400, "Invalid field(s)", "Some fields are invalid",
           Map.of("fields", fields, "messages", messages),
           errorAttributes);
+    } else if (throwable instanceof ConstraintViolationException exception) {
+      String message = exception.getConstraintViolations()
+          .stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; "));
+
+      putFields(400, "Invalid param(s)", message, errorAttributes);
     } else if (throwable instanceof PasswordsDoNotMatch exception) {
       putFields(400, "Password do not match", exception.getMessage(), errorAttributes);
     } else if (throwable instanceof ResourceNotFoundException exception) {

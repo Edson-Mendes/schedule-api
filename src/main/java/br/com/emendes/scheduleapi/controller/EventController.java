@@ -4,7 +4,6 @@ import br.com.emendes.scheduleapi.controller.swagger.EventControllerSwagger;
 import br.com.emendes.scheduleapi.dto.request.EventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
 import br.com.emendes.scheduleapi.service.impl.EventServiceImpl;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,7 @@ public class EventController implements EventControllerSwagger {
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Mono<EventResponse> create(@Valid @RequestBody EventRequest eventRequest) {
+  public Mono<EventResponse> create(@RequestBody EventRequest eventRequest) {
     return eventService.create(eventRequest);
   }
 
@@ -70,7 +69,7 @@ public class EventController implements EventControllerSwagger {
    */
   @PutMapping("/{eventId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public Mono<Void> update(@PathVariable(name = "eventId") Long eventId, @Valid @RequestBody EventRequest eventRequest) {
+  public Mono<Void> update(@PathVariable(name = "eventId") Long eventId, @RequestBody EventRequest eventRequest) {
     return eventService.update(eventId, eventRequest);
   }
 
