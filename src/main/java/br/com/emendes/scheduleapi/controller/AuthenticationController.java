@@ -1,5 +1,6 @@
 package br.com.emendes.scheduleapi.controller;
 
+import br.com.emendes.scheduleapi.controller.swagger.AuthenticationControllerSwagger;
 import br.com.emendes.scheduleapi.dto.request.AuthenticationRequest;
 import br.com.emendes.scheduleapi.dto.response.AuthenticationResponse;
 import br.com.emendes.scheduleapi.service.AuthenticationService;
@@ -15,12 +16,13 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
-public class AuthenticationController {
+public class AuthenticationController implements AuthenticationControllerSwagger {
 
   private final AuthenticationService authenticationService;
 
   /**
    * Método que trata a requisição POST /api/auth<br>
+   *
    * @param authenticationRequest contendo as informações de autenticação de User.
    */
   @PostMapping

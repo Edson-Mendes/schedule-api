@@ -1,5 +1,6 @@
 package br.com.emendes.scheduleapi.controller;
 
+import br.com.emendes.scheduleapi.controller.swagger.UserControllerSwagger;
 import br.com.emendes.scheduleapi.dto.request.RegisterUserRequest;
 import br.com.emendes.scheduleapi.dto.response.UserResponse;
 import br.com.emendes.scheduleapi.service.UserService;
@@ -16,7 +17,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController implements UserControllerSwagger {
 
   private final UserService userService;
 
