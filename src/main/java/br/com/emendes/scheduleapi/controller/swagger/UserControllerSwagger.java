@@ -14,6 +14,9 @@ import reactor.core.publisher.Mono;
 
 import static br.com.emendes.scheduleapi.config.OpenAPIConfig.SECURITY_SCHEME_KEY;
 
+/**
+ * Interface para manter as anotações do Swagger e não deixar UserController poluído.
+ */
 @Tag(name = "User", description = "User management APIs")
 public interface UserControllerSwagger {
 
@@ -30,10 +33,10 @@ public interface UserControllerSwagger {
   })
   Mono<UserResponse> register(RegisterUserRequest userRequest);
 
-
   @Operation(
       summary = "Fetch pageable Users",
-      description = "Fetch pageable of User's info that are id, name and email. Only Admin can fetch",
+      description = "Fetch pageable of User's info that are id, name and email. Only Admin can fetch."+
+          " Default value to page and size are 0 and 10, respectively.",
       tags = {"User"},
       security = {@SecurityRequirement(name = SECURITY_SCHEME_KEY)}
   )
@@ -62,6 +65,8 @@ public interface UserControllerSwagger {
       @ApiResponse(responseCode = "400", description = "Something is wrong with the request",
           content = @Content),
       @ApiResponse(responseCode = "401", description = "Unauthorized, client must be authenticate",
+          content = @Content),
+      @ApiResponse(responseCode = "404", description = "User not found",
           content = @Content)
   })
   Mono<UserResponse> findById(Long userId);

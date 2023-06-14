@@ -1,5 +1,6 @@
 package br.com.emendes.scheduleapi.controller;
 
+import br.com.emendes.scheduleapi.controller.swagger.EventControllerSwagger;
 import br.com.emendes.scheduleapi.dto.request.EventRequest;
 import br.com.emendes.scheduleapi.dto.response.EventResponse;
 import br.com.emendes.scheduleapi.service.impl.EventServiceImpl;
@@ -16,7 +17,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/events")
-public class EventController {
+public class EventController implements EventControllerSwagger {
 
   private final EventServiceImpl eventService;
 

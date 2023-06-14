@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Mono;
 
+/**
+ * Interface para manter as anotações do Swagger e não deixar AuthenticationController poluído.
+ */
 @Tag(name = "Authentication", description = "Authentication management APIs")
 public interface AuthenticationControllerSwagger {
 
