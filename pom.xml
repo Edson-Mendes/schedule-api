@@ -17,6 +17,7 @@
 		<java.version>17</java.version>
 		<r2dbc-postgresql.version>0.8.13.RELEASE</r2dbc-postgresql.version>
 		<jjwt.version>0.11.5</jjwt.version>
+		<springdoc.version>2.1.0</springdoc.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -62,6 +63,12 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+			<version>${springdoc.version}</version>
 		</dependency>
 
 		<dependency>
