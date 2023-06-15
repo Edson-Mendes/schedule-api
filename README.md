@@ -171,7 +171,6 @@ Segue abaixo um exemplo do corpo da requisição.
     "date_time" : "2023-06-22T10:30:00"
   }
   ```
-<br>
 
 - `Buscar Eventos - GET /api/events?page={PAGE}&size={SIZE}&date={DATE}`: Busca paginada dos eventos relacionados com o usuário logado, opcional busca por date (yyyy-MM-dd). O cliente pode enviar os parâmetros **page** e **size** na URL, os valores padrão são 0 e 10, respectivamente, e pode enviar o parâmetro **date** no formato yyyy-MM-dd para buscar por data<br>
   É necessário enviar token de autenticação no header da requisição, exemplo: **'Authorization: Bearer token.exemplo.de-autenticação'**.
