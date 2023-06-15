@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -87,11 +86,11 @@ public class EventServiceImpl implements EventService {
     Mono<Long> userIdMono = authenticationFacade.getCurrentUser().map(User::getId);
 
     Mono<List<EventResponse>> eventResponseListMono = userIdMono
-        .flatMapMany(userId -> eventRepository.findByDate(userId, localDate, size, page * size))
+        .flatMapMany(userId -> eventRepository.findByDateH2(userId, localDate, size, page * size))
         .map(eventMapper::toEventResponse)
         .collectList();
 
-    Mono<Long> countMono = userIdMono.flatMap(userId -> eventRepository.countByUserIdAndDate(userId, localDate));
+    Mono<Long> countMono = userIdMono.flatMap(userId -> eventRepository.countByUserIdAndDateH2(userId, localDate));
 
     return Mono.zip(eventResponseListMono, countMono)
         .map(tuple -> new PageImpl<>(tuple.getT1(), PageRequest.of(page, size), tuple.getT2()));

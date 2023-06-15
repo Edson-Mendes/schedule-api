@@ -1,0 +1,24 @@
+# Datasource
+spring:
+  r2dbc:
+    url: r2dbc:h2:mem:///schedule-db
+    username: sa
+    password:
+
+  sql:
+    init:
+      mode: always
+      platform: h2
+
+# Logging
+logging:
+  level:
+    org:
+      springframework:
+        r2dbc: DEBUG
+
+# JWT
+schedule-api:
+  jwt:
+    expiration: ${JWT_EXPIRATION:86400000}
+    secret: ${JWT_SECRET:12341234123412341234123412341234}
