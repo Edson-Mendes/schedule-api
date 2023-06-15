@@ -24,7 +24,7 @@ public class OpenAPIConfig {
     return new OpenAPI()
         .info(new Info().title("Schedule API")
             .description("REST API for schedule management")
-            .version("0.0.1-SNAPSHOT")
+            .version("0.1")
             .contact(contact))
         .components(new Components().addSecuritySchemes(SECURITY_SCHEME_KEY, securityScheme));
   }

@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.emendes</groupId>
 	<artifactId>schedule-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>schedule-api</name>
 	<description>REST API for schedule management</description>
 	<properties>
